@@ -64,18 +64,99 @@ return {
   -- augroups/autocommands and custom filetypes also this just pure lua so
   -- anything that doesn't fit in the normal config locations above can go here
   polish = function()
-    -- Set up custom filetypes
-    -- vim.filetype.add {
-    --   extension = {
-    --     foo = "fooscript",
-    --   },
-    --   filename = {
-    --     ["Foofile"] = "fooscript",
-    --   },
-    --   pattern = {
-    --     ["~/%.config/foo/.*"] = "fooscript",
-    --   },
-    -- }
+    -- Command to hot disable cmp.
+    vim.api.nvim_create_user_command("CmpOff", "lua require('cmp').setup.buffer {enabled = false}", {})
+    vim.api.nvim_create_user_command("CmpOn", "lua require('cmp').setup.buffer {enabled = true}", {})
+
+    -- Telescope plugins
+
+    require("telescope").load_extension "luasnip"
+
+    local lspkind = require "lspkind"
+
+    local source_mapping = {
+      buffer = "[Buffer]",
+      nvim_lsp = "[LSP]",
+      nvim_lua = "[Lua]",
+      cmp_tabnine = "[TN]",
+      path = "[Path]",
+      luasnip = "[Snip]",
+    }
+
+    require("cmp").setup {
+      sources = {
+        { name = "cmp_tabnine" },
+      },
+      formatting = {
+        format = function(entry, vim_item)
+          -- if you have lspkind installed, you can use it like
+          -- in the following line:
+          vim_item.kind = lspkind.symbolic(vim_item.kind, { mode = "symbol" })
+          vim_item.menu = source_mapping[entry.source.name]
+          if entry.source.name == "cmp_tabnine" then
+            local detail = (entry.completion_item.labelDetails or {}).detail
+            vim_item.kind = ""
+            if detail and detail:find ".*%%.*" then vim_item.kind = vim_item.kind .. " " .. detail end
+
+            if (entry.completion_item.data or {}).multiline then vim_item.kind = vim_item.kind .. " " .. "[ML]" end
+          end
+          local maxwidth = 80
+          vim_item.abbr = string.sub(vim_item.abbr, 1, maxwidth)
+          return vim_item
+        end,
+      },
+    }
+
+    -- Configure airline
+    vim.cmd "let g:airline_theme='minimalist'"
+    -- vim.cmd [[let g:airline_mode_map = {
+    --   \ '__'     : '-',
+    --   \ 'c'      : 'COMMAND',
+    --   \ 'i'      : 'INSERT',
+    --   \ 'ic'     : 'INSERT',
+    --   \ 'ix'     : 'I',
+    --   \ 'n'      : 'NORMAL',
+    --   \ 'multi'  : 'M',
+    --   \ 'ni'     : 'N',
+    --   \ 'no'     : 'N',
+    --   \ 'R'      : 'R',
+    --   \ 'Rv'     : 'R',
+    --   \ 's'      : 'SELECT',
+    --   \ 'S'      : 'S',
+    --   \ ''     : 'S',
+    --   \ 't'      : 'TERM',
+    --   \ 'v'      : 'V',
+    --   \ 'V'      : 'VISUAL',
+    --   \ ''     : 'V',
+    --   \ }]]
+    vim.cmd [[let g:airline_left_sep = '»']]
+    vim.cmd [[let g:airline_left_sep = '▶']]
+    vim.cmd [[let g:airline_right_sep = '«']]
+    vim.cmd [[let g:airline_right_sep = '◀']]
+    vim.cmd [[let g:airline_symbols.crypt = '🔒']]
+    vim.cmd [[let g:airline_symbols.linenr = '☰']]
+    vim.cmd [[let g:airline_symbols.linenr = '␊']]
+    vim.cmd [[let g:airline_symbols.linenr = '␤']]
+    vim.cmd [[let g:airline_symbols.linenr = '¶']]
+    vim.cmd [[let g:airline_symbols.maxlinenr = '']]
+    vim.cmd [[let g:airline_symbols.maxlinenr = '㏑']]
+    vim.cmd [[let g:airline_symbols.branch = '⎇']]
+    vim.cmd [[let g:airline_symbols.paste = 'ρ']]
+    vim.cmd [[let g:airline_symbols.paste = 'Þ']]
+    vim.cmd [[let g:airline_symbols.paste = '∥']]
+    vim.cmd [[let g:airline_symbols.spell = 'Ꞩ']]
+    vim.cmd [[let g:airline_symbols.notexists = 'Ɇ']]
+    vim.cmd [[let g:airline_symbols.whitespace = 'Ξ']]
+    vim.cmd [[let g:airline_left_sep = '']]
+    vim.cmd [[let g:airline_left_alt_sep = '']]
+    vim.cmd [[let g:airline_right_sep = '']]
+    vim.cmd [[let g:airline_right_alt_sep = '']]
+    vim.cmd [[let g:airline_symbols.branch = '']]
+    vim.cmd [[let g:airline_symbols.readonly = '']]
+    vim.cmd [[let g:airline_symbols.linenr = '☰']]
+    vim.cmd [[let g:airline_symbols.maxlinenr = '']]
+
+    -- Fix a small bug in the clangd-format formatter
 
     local capabilities = vim.lsp.protocol.make_client_capabilities()
     capabilities.offsetEncoding = { "utf-16" }

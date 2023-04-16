@@ -19,12 +19,12 @@ return {
       local cmp = require "cmp"
       -- modify the sources part of the options table
       opts.sources = cmp.config.sources {
-        { name = "nvim_lsp",      priority = 1000 },
-        { name = "luasnip",       priority = 750 },
-        { name = "cmp_tabnine",   priority = 600 },
-        { name = "latex_symbols", priority = 550 },
-        { name = "buffer",        priority = 500 },
-        { name = "path",          priority = 250 },
+        { name = "nvim_lsp",    priority = 1000 },
+        { name = "luasnip",     priority = 750 },
+        { name = "cmp_tabnine", priority = 600 },
+        -- { name = "latex_symbols", priority = 550 },
+        { name = "buffer",      priority = 500 },
+        { name = "path",        priority = 250 },
       }
 
       -- return the new table to be used
@@ -32,9 +32,19 @@ return {
     end,
   },
   {
+    "vim-airline/vim-airline",
+    lazy = false,
+    dependencies = "vim-airline/vim-airline-themes",
+  },
+  {
+    "rebelot/heirline",
+    enabled = false,
+  },
+  {
     "kdheepak/cmp-latex-symbols",
     dependencies = "hrsh7th/nvim-cmp",
-    lazy = false,
+    lazy = true,
+    enabled = false,
   },
   {
     "tzachar/cmp-tabnine",
@@ -62,5 +72,12 @@ return {
         -- Configuration here, or leave empty to use defaults
       }
     end,
+  },
+  {
+    "benfowler/telescope-luasnip.nvim",
+  },
+  {
+    "nvim-telescope/telescope-symbols.nvim",
+    lazy = false,
   },
 }
