@@ -12,6 +12,10 @@ return {
   {
     -- override nvim-cmp plugin
     "hrsh7th/nvim-cmp",
+    dependencies = {
+      "FelipeLema/cmp-async-path",
+      "quangnguyen30192/cmp-nvim-ultisnips",
+    },
     -- override the options table that is used in the `require("cmp").setup()` call
     opts = function(_, opts)
       -- opts parameter is the default options table
@@ -21,10 +25,11 @@ return {
       opts.sources = cmp.config.sources {
         { name = "nvim_lsp",    priority = 1000 },
         { name = "luasnip",     priority = 750 },
-        { name = "cmp_tabnine", priority = 600 },
+        { name = "ultisnips",   priority = 750 },
+        { name = "cmp_tabnine", priority = 600, max_item_count = 7 },
         -- { name = "latex_symbols", priority = 550 },
         { name = "buffer",      priority = 500 },
-        { name = "path",        priority = 250 },
+        { name = "async_path",  priority = 250 },
       }
 
       -- return the new table to be used
@@ -38,12 +43,6 @@ return {
   },
   {
     "rebelot/heirline",
-    enabled = false,
-  },
-  {
-    "kdheepak/cmp-latex-symbols",
-    dependencies = "hrsh7th/nvim-cmp",
-    lazy = true,
     enabled = false,
   },
   {
@@ -79,5 +78,15 @@ return {
   {
     "nvim-telescope/telescope-symbols.nvim",
     lazy = false,
+  },
+  {
+    "hrsh7th/cmp-path",
+    enabled = false,
+  },
+  {
+    "honza/vim-snippets",
+  },
+  {
+    "alvan/vim-closetag",
   },
 }

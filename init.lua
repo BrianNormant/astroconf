@@ -17,7 +17,7 @@ return {
     },
   },
   -- Set colorscheme to use
-  colorscheme = "rose-pine",
+  colorscheme = "rose-pine-main",
   -- Diagnostics configuration (for vim.diagnostics.config({...})) when diagnostics are on
   diagnostics = {
     virtual_text = true,
@@ -67,10 +67,12 @@ return {
     -- Command to hot disable cmp.
     vim.api.nvim_create_user_command("CmpOff", "lua require('cmp').setup.buffer {enabled = false}", {})
     vim.api.nvim_create_user_command("CmpOn", "lua require('cmp').setup.buffer {enabled = true}", {})
-
+    vim.cmd "set pumheight=10"
+    vim.cmd "set cmdheight=1"
     -- Telescope plugins
 
     require("telescope").load_extension "luasnip"
+    -- require("telescope").load_extension "command_center"
 
     local lspkind = require "lspkind"
 
@@ -79,14 +81,15 @@ return {
       nvim_lsp = "[LSP]",
       nvim_lua = "[Lua]",
       cmp_tabnine = "[TN]",
-      path = "[Path]",
-      luasnip = "[Snip]",
+      async_path = "[Path]",
+      luasnip = "[LuaS]",
+      ultisnip = "[UltiS]",
     }
 
     require("cmp").setup {
-      sources = {
-        { name = "cmp_tabnine" },
-      },
+      -- sources = {
+      --   { name = "cmp_tabnine" },
+      -- },
       formatting = {
         format = function(entry, vim_item)
           -- if you have lspkind installed, you can use it like
@@ -106,6 +109,32 @@ return {
         end,
       },
     }
+
+    local prefetch = vim.api.nvim_create_augroup("prefetch", { clear = true })
+
+    vim.api.nvim_create_autocmd("BufRead", {
+      group = prefetch,
+      pattern = "*",
+      callback = function() require("cmp_tabnine"):prefetch(vim.fn.expand "%:p") end,
+    })
+
+    -- local compare = require "cmp.config.compare"
+    -- require("cmp").setup {
+    --   sorting = {
+    --     priority_weight = 2,
+    --     comparators = {
+    --       require "cmp_tabnine.compare",
+    --       compare.offset,
+    --       compare.exact,
+    --       compare.score,
+    --       compare.recently_used,
+    --       compare.kind,
+    --       compare.sort_text,
+    --       compare.length,
+    --       compare.order,
+    --     },
+    --   },
+    -- }
 
     -- Configure airline
     vim.cmd "let g:airline_theme='minimalist'"
@@ -155,7 +184,7 @@ return {
     vim.cmd [[let g:airline_symbols.readonly = '']]
     vim.cmd [[let g:airline_symbols.linenr = '☰']]
     vim.cmd [[let g:airline_symbols.maxlinenr = '']]
-
+    vim.cmd "AirlineRefresh"
     -- Fix a small bug in the clangd-format formatter
 
     local capabilities = vim.lsp.protocol.make_client_capabilities()
