@@ -67,12 +67,16 @@ return {
     -- Command to hot disable cmp.
     vim.api.nvim_create_user_command("CmpOff", "lua require('cmp').setup.buffer {enabled = false}", {})
     vim.api.nvim_create_user_command("CmpOn", "lua require('cmp').setup.buffer {enabled = true}", {})
-    vim.cmd "set pumheight=10"
-    vim.cmd "set cmdheight=1"
+
     -- Telescope plugins
 
     require("telescope").load_extension "luasnip"
+    require("telescope").load_extension "media_files"
     -- require("telescope").load_extension "command_center"
+
+    require("telekasten").setup {
+      home = vim.fn.expand "~/Notes", -- Put the name of your notes directory here
+    }
 
     local lspkind = require "lspkind"
 
@@ -111,6 +115,18 @@ return {
     }
 
     local prefetch = vim.api.nvim_create_augroup("prefetch", { clear = true })
+    require("telescope").setup {
+      extensions = {
+        media_files = {
+          -- filetypes whitelist
+          -- defaults to {"png", "jpg", "mp4", "webm", "pdf"}
+          filetypes = { "png", "webp", "jpg", "jpeg" },
+          -- find command (defaults to `fd`)
+          find_cmd = "rg",
+          -- If doesnt work, edit the .lua file in .local directly.
+        },
+      },
+    }
 
     vim.api.nvim_create_autocmd("BufRead", {
       group = prefetch,
