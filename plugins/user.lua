@@ -25,24 +25,48 @@ return {
       local cmp = require "cmp"
       -- modify the sources part of the options table
       opts.sources = cmp.config.sources {
-        { name = "nvim_lsp",    priority = 1000 },
-        { name = "luasnip",     priority = 750 },
+        { name = "nvim_lsp",   priority = 1000, max_item_count = 3 },
+        { name = "luasnip",    priority = 750,  max_item_count = 2 },
         --{ name = "ultisnips",   priority = 750 },
-        { name = "cmp_tabnine", priority = 600, max_item_count = 7 },
+        -- { name = "cmp_tabnine", priority = 600,  max_item_count = 3 },
         -- { name = "latex_symbols", priority = 550 },
-        { name = "buffer",      priority = 500 },
-        { name = "async_path",  priority = 250 },
+        { name = "buffer",     priority = 500,  max_item_count = 3 },
+        { name = "async_path", priority = 250,  max_item_count = 3 },
       }
 
       -- return the new table to be used
       return opts
     end,
+    enabled = true,
+    lazy = true,
+  },
+  {
+    "ms-jpq/coq_nvim",
+    config = function()
+      vim.g.coq_settings = {
+        clients = {
+          tabnine = {
+            enabled = true,
+          },
+          tmux = {
+            enabled = false,
+          },
+        },
+      }
+      vim.g.coq_settings.clients.tmux.enabled = false
+    end,
+    dependencies = {
+      "ms-jpq/coq.artifacts",
+      "ms-jpq/coq.thirdparty",
+    },
+    lazy = false,
   },
   {
     "tzachar/cmp-tabnine",
     dependencies = "hrsh7th/nvim-cmp",
     build = "./install.sh",
     lazy = false,
+    enabled = false,
   },
 
   -- UI plugins

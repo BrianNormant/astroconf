@@ -9,11 +9,20 @@ return {
     -- second key is the lefthand side of the map
     -- mappings seen under group name "Buffer"
     ["<leader>bn"] = { "<cmd>tabnew<cr>", desc = "New tab" },
-    ["<leader>fs"] = { "<cmd>Telescope luasnip<cr>", desc = "Insert a snippet" },
+    -- ["<leader>fs"] = { "<cmd>Telescope luasnip<cr>", desc = "Insert a snippet" },
     ["<leader>fS"] = { "<cmd>Telescope symbols<cr>", desc = "Insert a symbol" },
     ["<leader>fn"] = { "<cmd>Telekasten find_notes<cr>", desc = "Find Notes" },
     ["<leader>fN"] = { "<cmd>Telescope notify<cr>", desc = "Find notification" },
-    ["<C-l>"] = { "<cmd>Telescope symbols<cr>", desc = "Insert a symbol" },
+    ["<C-l>"] = {
+      function()
+        if vim.g.term_is_open then
+        else
+          vim.cmd "Telescope symbols"
+        end
+      end,
+      desc = "Insert a symbol",
+    },
+
     ["<leader>bD"] = {
       function()
         require("astronvim.utils.status").heirline.buffer_picker(
@@ -44,6 +53,14 @@ return {
     -- ["<esc>"] = false,
   },
   i = {
-    ["<C-l>"] = { "<cmd>Telescope symbols<cr>", desc = "Insert a symbol" },
+    ["<C-l>"] = {
+      function()
+        if vim.g.term_is_open then
+        else
+          vim.cmd "Telescope symbols"
+        end
+      end,
+      desc = "Insert a symbol",
+    },
   },
 }

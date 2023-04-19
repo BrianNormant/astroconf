@@ -5,11 +5,13 @@
 
 float 💻π(int p) { return 3.141591; }
 
+typedef char * 📓;
+
 // Please kill me, I don't want to accept that you can use emoji in variable
-// names,😢
+// names
 int main(void) {
 
-  char * 💀 = "Text";
+  📓 💀 = "Text";
 
   printf("Hello world, this is a value : %d \n", 😗 );
 

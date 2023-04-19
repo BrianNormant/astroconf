@@ -128,11 +128,17 @@ return {
       },
     }
 
-    vim.api.nvim_create_autocmd("BufRead", {
-      group = prefetch,
-      pattern = "*",
-      callback = function() require("cmp_tabnine"):prefetch(vim.fn.expand "%:p") end,
-    })
+    vim.g.term_is_open = false
+    require("toggleterm").setup {
+      on_open = function(t) vim.g.term_is_open = true end,
+      on_close = function(t) vim.g.term_is_open = false end,
+    }
+
+    -- vim.api.nvim_create_autocmd("BufRead", {
+    -- group = prefetch,
+    -- pattern = "*",
+    -- callback = function() require("cmp_tabnine"):prefetch(vim.fn.expand "%:p") end,
+    -- })
 
     -- local compare = require "cmp.config.compare"
     -- require("cmp").setup {
@@ -206,5 +212,6 @@ return {
     local capabilities = vim.lsp.protocol.make_client_capabilities()
     capabilities.offsetEncoding = { "utf-16" }
     require("lspconfig").clangd.setup { capabilities = capabilities }
+    vim.cmd "COQnow"
   end,
 }
